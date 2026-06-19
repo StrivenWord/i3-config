@@ -4,7 +4,7 @@
 # subdirectories.
 
 # First, ignoring everything by default.
-*/
+*
 
 # Then, allowing specific subdirectories.
 !i3/*
