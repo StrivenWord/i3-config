@@ -1,0 +1,20 @@
+{
+	"folders":
+	[
+		{
+			"path": "i3status",
+		},
+		{
+			"path": "i3",
+		},
+		{
+			"path": "i3blocks",
+		}
+	],
+	"file_associations": {
+		"/home/strivenword/.config/i3/config": "ShellScript",
+		"/home/strivenword/.config/i3/config.original": "ShellScript",
+		"/home/strivenword/.config/i3blocks/config": "ShellScript",
+		"/home/strivenword/.config/i3status/config": "ShellScript",
+	},
+}

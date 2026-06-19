@@ -1,0 +1,25 @@
+# The git repo at .config/* is only for the i3 dotfiles, which have multiple
+# top-level dirs inside of .config. Repos for configurtion for other programs,
+# including Alacritty and Vim, are contained within their respective
+# subdirectories.
+
+# First, ignoring everything by default.
+*/
+
+# Then, allowing specific subdirectories.
+!i3/*
+!i3blocks/*
+!i3status/*
+
+# And some specific files directly here in .config
+!i3.*
+!i3-*
+
+# And these other floating files need to be manually ignored (apparently)
+mimeapps.list
+pavucontrol.ini
+user-dirs.dirs
+user-dirs.locale
+
+# ...but Sublime Text workspace files are NOT supposed to be committed...
+*.sublime-workspace
