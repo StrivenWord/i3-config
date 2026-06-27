@@ -6,11 +6,15 @@
 # First, ignoring everything by default.
 *
 
+# Then, un-ignore directories.
+!i3/
+!i3blocks/
+!i3status/
+
 # Then, allowing specific subdirectories.
-!i3/*
-!i3/config
-!i3blocks/*
-!i3status/*
+!"i3/"
+!i3blocks/
+!i3status/
 
 # And some specific files directly here in .config
 !i3.*
