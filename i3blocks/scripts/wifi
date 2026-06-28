@@ -1,0 +1,18 @@
+#!/bin/sh
+
+nmcli -t -f ACTIVE,SIGNAL dev wifi 2>/dev/null |
+  awk -F: '
+    $1 == "yes" {
+      print "W:" $2 "%"
+      print $2 "%"
+      found = 1
+    }
+    END {
+      if (!found) {
+        print "W:--"
+        print "--"
+      }
+    }
+  '
+
+exit 0

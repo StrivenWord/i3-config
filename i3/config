@@ -1,0 +1,346 @@
+# i3 config file (v4)
+# Based on auto-generated config from i3-config-wizard(1)
+# Modified for Lenovo 100e Chromebook (1366x768, 4GB RAM)
+#
+# CHANGE LOG (from auto-generated defaults):
+#   - Mod key: Mod1 (Alt) → Mod4 (Super/Search key)
+#     WHY: Alt conflicts with application menus; the Chromebook Search key
+#     is in the perfect position for a WM modifier.
+#     TO REVERT: change "set $mod Mod4" back to "set $mod Mod1"
+#
+#   - Font: monospace 8 → DejaVu Sans 9
+#     WHY: slightly more readable on 768p; sans-serif looks cleaner in bar
+#
+#   - Window borders: added "default_border pixel 2" to remove title bars
+#     WHY: title bars eat ~20px per window; on 768 vertical pixels that
+#     matters. The 2px colored border still shows which window is focused.
+#
+#   - Colors: added client.focused/unfocused/urgent color definitions
+#     WHY: stock i3 focused/unfocused windows look nearly identical
+#
+#   - Bar: added colors, position, tray_output, custom i3status config path
+#     WHY: stock bar is an unstyled gray strip
+#
+#   - Added: rofi launcher binding (requires: sudo apt install rofi)
+#   - Added: brightness key bindings (requires: sudo apt install brightnessctl)
+#   - Added: Chromebook top-row fallback bindings ($mod+F6 through $mod+F10)
+#   - Added: floating rules for dialog-type applications
+#   - Added: lock screen binding ($mod+Shift+x)
+#   - Added: startup apps (nm-applet was already there; added nitrogen, dunst)
+#
+# To apply changes: $mod+Shift+r (restart i3 in-place, keeps windows open)
+
+# ============================================================================
+# MODIFIER KEY
+# ============================================================================
+# Mod4 = Super key = Chromebook "Search" key (between Ctrl and Alt)
+# If you want Alt back: change Mod4 to Mod1
+set $mod Mod4
+
+# ============================================================================
+# FONT
+# ============================================================================
+font pango:DejaVu Sans 9
+
+# ============================================================================
+# WINDOW APPEARANCE
+# ============================================================================
+# Remove title bars, use thin colored borders instead.
+# This reclaims significant vertical space on a 768p display.
+# To get title bars back: comment out the next line (or change "pixel 2" to "normal")
+default_border pixel 2
+default_floating_border pixel 2
+
+# When a workspace has only one window, hide even the 2px border (no ambiguity)
+hide_edge_borders smart
+
+# Color scheme: Everforest Dark
+# Format:                border   backgr    text      indicator child_border
+client.focused          #A7C080   #A7C080   #272E33   #83C092   #A7C080
+client.focused_inactive #374145   #374145   #D3C6AA   #859289   #414B50
+client.unfocused        #2E383C   #2E383C   #9DA9A0   #7A8478   #2E383C2
+client.urgent           #E67E80   #E67E80   #272E33   #DBBC7F   #E67E80
+client.placeholder      #374145   #374145   #D3C6AA   #374145   #374145
+client.background       #1E2326
+
+# ============================================================================
+# XDG AUTOSTART
+# ============================================================================
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# ============================================================================
+# SCREEN LOCK & POWER
+# ============================================================================
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 1a1a2e
+
+# Manual lock: $mod+Shift+x
+# (Not $mod+l because that conflicts with the jkl; focus keys if you use them)
+bindsym $mod+Shift+x exec i3lock -c 1a1a2e
+
+# ============================================================================
+# NETWORK & SYSTEM TRAY
+# ============================================================================
+exec --no-startup-id nm-applet
+# Notification daemon (installed with i3 metapackage)
+exec --no-startup-id dunst
+
+# ============================================================================
+# WALLPAPER
+# ============================================================================
+# Set wallpaper with nitrogen. Run "nitrogen" once to pick an image via GUI,
+# then --restore reloads it on every login.
+# Requires: sudo apt install nitrogen
+exec --no-startup-id nitrogen --restore
+
+# ============================================================================
+# AUTOTILING
+# ============================================================================
+# Automatically alternates split direction based on window dimensions,
+# producing a natural grid/spiral layout instead of endless columns.
+# Requires: pip3 install autotiling --break-system-packages
+# (also needs: sudo apt install python3-i3ipc)
+# exec_always = restarts with i3 reload; exec = only on first login
+exec_always --no-startup-id autotiling
+
+# ============================================================================
+# AUDIO CONTROLS
+# ============================================================================
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+# NOTE: Changed volume step from 10% to 5% — 10% jumps are jarring on laptop speakers
+
+# ============================================================================
+# BRIGHTNESS CONTROLS (Chromebook top-row keys)
+# ============================================================================
+# Requires: sudo apt install brightnessctl
+# Your Chromebook maps the top row to F1-F10 (confirmed via your xev output).
+# If XF86 symbols are mapped by your desktop/kernel:
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
+
+# Fallback: use $mod+F6/$mod+F7 if the XF86 keysyms aren't generated
+bindsym $mod+F6 exec --no-startup-id brightnessctl set 5%-
+bindsym $mod+F7 exec --no-startup-id brightnessctl set 5%+
+
+# ============================================================================
+# MOUSE BEHAVIOR
+# ============================================================================
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# move tiling windows via drag & drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier.
+tiling_drag modifier titlebar
+
+# ============================================================================
+# LAUNCHERS
+# ============================================================================
+# Start a terminal
+bindsym $mod+Return exec i3-sensible-terminal
+
+# ============================================================================
+# SCREENSHOT
+# ============================================================================
+# full screen to automatically named file 
+bindsym $mod+Shift+p exec --no-startup-id maim --format=png ~/Pictures/screenshots/screenshot_$(date +$d-$b-%Y_%H-%M-%S).png
+# selection to clipboard
+bindsym $mod+Shift+bracketleft --no-startup-id maim --select | xclip -selection clipboard -t image/png
+# active window to clipboard
+bindsym $mod+Shift+bracketright --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Application launcher — rofi (much nicer than dmenu on a small screen)
+# Requires: sudo apt install rofi
+# Falls back to dmenu if rofi isn't installed.
+bindsym $mod+d exec --no-startup-id "which rofi > /dev/null 2>&1 && rofi -show drun -show-icons || dmenu_run"
+
+# Screenshot (requires: sudo apt install scrot)
+bindsym Print exec --no-startup-id scrot ~/Pictures/screenshot_%Y%m%d_%H%M%S.png
+bindsym $mod+Print exec --no-startup-id scrot -s ~/Pictures/screenshot_%Y%m%d_%H%M%S.png
+
+# ============================================================================
+# FOCUS & MOVEMENT (Vim-style hjkl)
+# ============================================================================
+# h=left, j=down, k=up, l=right — standard Vim directions
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Arrow keys still work too
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move focused window: Vim keys
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Move focused window: arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# ============================================================================
+# LAYOUT CONTROLS
+# ============================================================================
+# Split direction
+# $mod+b = horizontal split (think "beside") — moved from $mod+h to free h for Vim nav
+# $mod+v = vertical split (unchanged)
+bindsym $mod+b split h
+bindsym $mod+v split v
+
+# Enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# Change container layout (stacked, tabbed, toggle split)
+# TIP: Tabbed mode ($mod+w) is extremely useful on 1366x768 — it stacks
+# windows as tabs instead of side-by-side, giving each the full width.
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# Change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Focus the parent container
+bindsym $mod+less focus parent
+
+# Focus the child container...  >
+bindsym $mod+greater focus child
+
+# ============================================================================
+# FLOATING RULES
+# ============================================================================
+# These apps work better as floating windows than tiled
+for_window [class="Pavucontrol"] floating enable
+for_window [class="Lxappearance"] floating enable
+for_window [class="Nitrogen"] floating enable
+for_window [class="Nm-connection-editor"] floating enable
+for_window [class="Blueman-manager"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+
+# ============================================================================
+# WORKSPACES
+# ============================================================================
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# Switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# ============================================================================
+# CONFIG MANAGEMENT
+# ============================================================================
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+# Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# Exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# ============================================================================
+# RESIZE MODE
+# ============================================================================
+mode "resize" {
+        # Vim-style: h=shrink width, j=grow height, k=shrink height, l=grow width
+        bindsym h resize shrink width 5 px or 5 ppt
+        bindsym j resize grow height 5 px or 5 ppt
+        bindsym k resize shrink height 5 px or 5 ppt
+        bindsym l resize grow width 5 px or 5 ppt
+
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+# NOTE: Changed resize step from 10 to 5 — finer control on a small screen
+
+bindsym $mod+r mode "resize"
+
+# ============================================================================
+# STATUS BAR
+# ============================================================================
+bar {
+        status_command i3blocks
+        position top
+        tray_output primary
+        font pango:DejaVu Sans 11
+
+        colors {
+                background #4F5B58  # Everforest Dark bg-5
+                statusline #1E2326  # Everforest Dark bg-dim
+                separator  #D3C6AA  # Everforest Dark fg
+
+                # class            border  backgr  text
+                focused_workspace  #A7C080 #A7C080 #272E33
+                active_workspace   #414B50 #414B50 #D3C6AA
+                inactive_workspace #2E383C #2E383C #9DA9A0
+                urgent_workspace   #E67E80 #E67E80 #272E33
+        }
+}
+
+# ============================================================================
+# CLIPBOARD MANAGER
+# ============================================================================
+exec --no-startup-id clipmenud
+bindsym $mod+Shift+v exec clipmenu
+
+# ============================================================================
+# Power controls
+# ============================================================================
+bindsym Control+Shift+$mod+q exec systemctl poweroff
+bindsym Control+Shift+$mod+o exec --no-startup-id "i3lock -c 0000ff && sleep 0.5 && systemctl suspend"
+bindsym Control+Shift+$mod+p exec --no-startup-id "i3lock -c 00ff00 && sleep 0.5 && systemctl hibernate"

@@ -1,0 +1,78 @@
+# i3status config for Lenovo 100e Chromebook
+# Place this file at: ~/.config/i3status/config
+#
+# After editing, restart i3 with $mod+Shift+r to see changes.
+# You can test the output directly by running: i3status
+#
+# NOTES FOR THIS MACHINE:
+#   - Wireless interface: check yours with "ip link" — it might be wlp1s0,
+#     wlp1s0, or mlan0. Change the "wireless" section below to match.
+#   - Battery: the path pattern BAT%d works for most laptops. If battery
+#     doesn't show, check: ls /sys/class/power_supply/
+#   - No ethernet module included (this is a wifi-only Chromebook)
+
+general {
+        output_format = "i3bar"
+        colors = true
+        color_good = "#7ec8a0"
+        color_degraded = "#e5c07b"
+        color_bad = "#e06c75"
+        interval = 5
+        markup = "pango"
+}
+
+# Module order — left to right in the bar
+# Remove or comment out any you don't want
+order += "wireless wlp1s0"
+order += "battery 0"
+order += "cpu_usage"
+order += "memory"
+order += "volume master"
+order += "tztime local"
+
+wireless wlp1s0 {
+        # IMPORTANT: Change "wlp1s0" to your actual interface name.
+        # Find it with: ip link | grep wl
+        # Common names: wlp1s0, wlp1s0, mlan0
+        format_up = "W: %essid %quality"
+        format_down = "W: down"
+}
+
+battery 0 {
+        format = "BAT: %status %percentage %remaining"
+        format_down = "No battery"
+        status_chr = "CHR"
+        status_bat = "DIS"
+        status_full = "FULL"
+        low_threshold = 20
+        threshold_type = percentage
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        # If battery doesn't appear, try:
+        #   ls /sys/class/power_supply/
+        # and adjust the path accordingly. Some Chromebooks use
+        # sbs-20-000a or similar names instead of BAT0.
+}
+
+cpu_usage {
+        format = "CPU: %usage"
+        max_threshold = 85
+        degraded_threshold = 50
+}
+
+memory {
+        format = "MEM: %used/%total"
+        threshold_degraded = "500M"
+        threshold_critical = "200M"
+}
+
+volume master {
+        format = "VOL: %volume"
+        format_muted = "VOL: muted"
+        device = "default"
+        mixer = "Master"
+        mixer_idx = 0
+}
+
+tztime local {
+        format = "%a %b %d  %H:%M"
+}

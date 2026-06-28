@@ -1,0 +1,29 @@
+#!/bin/sh
+
+case "$BLOCK_BUTTON" in
+  1)
+    choice=$(
+      printf '%s\n' \
+        "s uspend" \
+        "log off"F \
+        "power off" |
+        dmenu -i -p "power:"
+    )
+
+    case "$choice" in
+      suspend)
+        systemctl suspend
+        ;;
+      "log off")
+        i3-msg exit
+        ;;
+      "power off")
+        systemctl poweroff
+        ;;
+    esac
+    ;;
+esac
+
+echo "⏻"
+
+exit 0

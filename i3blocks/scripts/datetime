@@ -1,0 +1,13 @@
+#!/bin/sh
+
+case "$BLOCK_BUTTON" in
+  1)
+    if command -v gsimplecal >/dev/null 2>&1; then
+      gsimplecal >/dev/null 2>&1 &
+    fi
+    ;;
+esac
+
+date '+%a %m/%d %I:%M %p'
+
+exit 0

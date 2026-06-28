@@ -1,0 +1,51 @@
+# ~/.config/i3blocks/config
+
+separator=true
+separator_block_width=7
+
+# Wi-Fi signal using NetworkManager.
+# If this shows W:--, verify NetworkManager is managing your Wi-Fi.
+# [wifi]  -- something else is givng a graphical wifi widget on the far right.
+# command=~/.config/i3blocks/scripts/wifi
+# interval=10
+# color=#88C0D0
+
+# CPU percentage.
+[cpu]
+command=~/.config/i3blocks/scripts/cpu
+interval=5
+color=#E69875      # Everforest Dark orange
+min_width=C:100%
+align=center
+
+# RAM usage percentage.
+[memory]
+command=~/.config/i3blocks/scripts/memory
+interval=5
+color=#9DA9A0      # Everforest Dark gray2
+min_width=M:100%
+align=center
+
+# Battery status.
+# Handles BAT0/BAT1 automatically.
+[battery]
+command=~/.config/i3blocks/scripts/battery
+interval=30
+color=#E67E80      # Everforest Dark statusline3
+min_width=B:100%+
+align=center
+
+# Date/time.
+# Left-click opens gsimplecal.
+# -- eventually, I want calcurse or something similar instead
+[datetime]
+command=~/.config/i3blocks/scripts/datetime
+interval=30
+color=#DBBC7F      # Everforest Dark yellow
+
+# Power menu.
+# Left-click opens a dmenu menu: suspend, log off, power off.
+# [power]
+# command=~/.config/i3blocks/scripts/power
+# interval=once
+# color=#BF616A
