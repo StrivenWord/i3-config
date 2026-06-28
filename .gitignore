@@ -4,7 +4,7 @@
 # subdirectories.
 
 # First, ignoring everything by default.
-*
+/*
 
 # Then, un-ignore directories.
 !i3/
@@ -12,7 +12,7 @@
 !i3status/
 
 # Then, allowing specific subdirectories.
-!"i3/"
+!i3/
 !i3blocks/
 !i3status/
 
